@@ -1,39 +1,57 @@
-function INDEX = rand_index(C1, C2, MOD)
-    %% THROW ERRORS
-    if length(C1)~=length(C2)
-        error('Both partitions must contain the same number of points');
+function ri = rand_index(p1, p2, varargin)
+%RAND_INDEX Computes the rand index between two partitions.
+%   RAND_INDEX(p1, p2) computes the rand index between partitions p1 and
+%   p2.
+%   
+%   RAND_INDEX(p1, p2, 'adjusted'); computes the adjusted rand index
+%   between partitions p1 and p2. The adjustment accounts for chance
+%   correlation.
+
+    % Parse the input and throw errors
+    adj = 0;
+    if nargin == 0
     end
-    if MOD~=1 && MOD~=0
-        error('The value of MOD must be either 1 or 0.')
+    if nargin > 3
+        error('Too many input arguments');
+    end
+    if nargin == 3
+        if strcmp(varargin{1}, 'adjusted')
+            adj = 1;
+        else
+            error('%s is an unrecognized argument.', varargin{1});
+        end
+    end
+    if length(p1)~=length(p2)
+        error('Both partitions must contain the same number of points.');
     end
     
-    %% PRELIMS
-    N = length(C1);
-    [junk1 junk2 C1] = unique(C1);
-    N1 = max(C1);
-    [junk1 junk2 C2] = unique(C2);
-    N2 = max(C2);
+	% Preliminary computations and cleansing of the partitions
+    N = length(p1);
+    [~, ~, p1] = unique(p1);
+    N1 = max(p1);
+    [~, ~, p2] = unique(p2);
+    N2 = max(p2);
     
-    %% FORM MATCHING MATRIX
+    % Create the matching matrix
     for i=1:1:N1
         for j=1:1:N2
-            G1 = find(C1==i);
-            G2 = find(C2==j);
+            G1 = find(p1==i);
+            G2 = find(p2==j);
             n(i,j) = length(intersect(G1,G2));
         end
     end
     
-    %% CALCULATE RAND INDEX
-    if MOD==0
+    % If required, calculate the basic rand index
+    if adj==0
         ss = sum(sum(n.^2));
         ss1 = sum(sum(n,1).^2);
         ss2 =sum(sum(n,2).^2);
-        INDEX = (nchoosek2(N,2) + ss - 0.5*ss1 - 0.5*ss2)/nchoosek2(N,2);
+        ri = (nchoosek2(N,2) + ss - 0.5*ss1 - 0.5*ss2)/nchoosek2(N,2);
     end
     
     
-    %% CALCULATE ADJUSTED RAND INDEX
-    if MOD==1
+    % Otherwise, calculate the adjusted rand index
+    if adj==1
         ssm = 0;
         sm1 = 0;
         sm2 = 0;
@@ -52,10 +70,11 @@ function INDEX = rand_index(C1, C2, MOD)
         end
         NN = ssm - sm1*sm2/nchoosek2(N,2);
         DD = (sm1 + sm2)/2 - sm1*sm2/nchoosek2(N,2);
-        INDEX = NN/DD;
+        ri = NN/DD;
     end 
     
 
+    % Special definition of n choose k
     function c = nchoosek2(a,b)
         if a>1
             c = nchoosek(a,b);
