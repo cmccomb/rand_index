@@ -1,0 +1,9 @@
+language: cpp
+
+compiler: g++
+
+before_script:
+  - sudo apt-get install octave
+
+script: 
+  - octave test.m
