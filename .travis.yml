@@ -3,8 +3,9 @@ language: cpp
 compiler: g++
 
 before_script:
-  - sudo apt-get install octave
+  - sudo add-apt-repository ppa:picaso/octave
   - sudo apt-get update
-
+  - sudo apt-get install octave
+  
 script: 
   - octave test.m
