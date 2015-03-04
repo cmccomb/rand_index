@@ -4,6 +4,7 @@ compiler: g++
 
 before_script:
   - sudo apt-get install octave
+  - sudo apt-get update
 
 script: 
   - octave test.m
