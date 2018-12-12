@@ -9,9 +9,14 @@ function ri = rand_index(p1, p2, varargin)
 %   between partitions p1 and p2. The adjustment accounts for chance
 %   correlation.
 
-    % Parse the input and throw errors
+    %% Parse the input and throw errors   
+    % Check inputs
     adj = 0;
     if nargin == 0
+        error('Arguments must be supplied.');
+    end
+    if nargin == 1
+        error('Two partitions must be supplied.');
     end
     if nargin > 3
         error('Too many input arguments');
@@ -26,26 +31,38 @@ function ri = rand_index(p1, p2, varargin)
     if length(p1)~=length(p2)
         error('Both partitions must contain the same number of points.');
     end
+    
+    % Check if arguments need to be flattened
+    if length(p1)~=numel(p1)
+        p1 = p1(:);
+        warning('The first partition was flattened to a 1D vector.')
+    end
+    if length(p2)~=numel(p2)
+        p2 = p2(:);
+        warning('The second partition was flattened to a 1D vector.')
+    end
+    
+    % Check for integers
     if isreal(p1) && all(rem(p1, 1)==0)
         % all is well
     else
-        error('The first partition must contain integers.');
+        warning('The first partition contains non-integers, which may make the results meaningless. Attempting to continue calculations.');
     end
         
     if isreal(p2) && all(rem(p2, 1)==0)
         % all is well
     else
-        error('The second partition must contain integers. ');
+        warning('The second partition contains non-integers, which may make the results meaningless. Attempting to continue calculations.');
     end
     
-	% Preliminary computations and cleansing of the partitions
+	%% Preliminary computations and cleansing of the partitions
     N = length(p1);
     [~, ~, p1] = unique(p1);
     N1 = max(p1);
     [~, ~, p2] = unique(p2);
     N2 = max(p2);
     
-    % Create the matching matrix
+    %% Create the matching matrix
     for i=1:1:N1
         for j=1:1:N2
             G1 = find(p1==i);
@@ -54,7 +71,7 @@ function ri = rand_index(p1, p2, varargin)
         end
     end
     
-    % If required, calculate the basic rand index
+    %% If required, calculate the basic rand index
     if adj==0
         ss = sum(sum(n.^2));
         ss1 = sum(sum(n,1).^2);
@@ -63,7 +80,7 @@ function ri = rand_index(p1, p2, varargin)
     end
     
     
-    % Otherwise, calculate the adjusted rand index
+    %% Otherwise, calculate the adjusted rand index
     if adj==1
         ssm = 0;
         sm1 = 0;
@@ -87,7 +104,7 @@ function ri = rand_index(p1, p2, varargin)
     end 
     
 
-    % Special definition of n choose k
+    %% Special definition of n choose k
     function c = nchoosek2(a,b)
         if a>1
             c = nchoosek(a,b);
