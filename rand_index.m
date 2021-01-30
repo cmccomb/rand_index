@@ -99,8 +99,12 @@ function ri = rand_index(p1, p2, varargin)
             sm2 = sm2 + nchoosek2(temp(i),2);
         end
         NN = ssm - sm1*sm2/nchoosek2(N,2);
-        DD = (sm1 + sm2)/2 - sm1*sm2/nchoosek2(N,2);
-        ri = NN/DD;
+        DD = (sm1 + sm2)/2 - sm1*sm2/nchoosek2(N,2);   
+        if (NN == 0 && DD==0)
+            ri = 1;
+        else
+            ri = NN/DD;
+        end
     end 
     
 
