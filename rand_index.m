@@ -4,12 +4,12 @@ function ri = rand_index(p1, p2, varargin)
 %   p2. Both p1 and p2 must be specified as N-by-1 or 1-by-N vectors in
 %   which each elements is an integer indicating which cluster the point
 %   belongs to.
-%   
+%
 %   RAND_INDEX(p1, p2, 'adjusted') computes the adjusted rand index
 %   between partitions p1 and p2. The adjustment accounts for chance
 %   correlation.
 
-    %% Parse the input and throw errors   
+    %% Parse the input and throw errors
     % Check inputs
     adj = 0;
     if nargin == 0
@@ -31,7 +31,7 @@ function ri = rand_index(p1, p2, varargin)
     if length(p1)~=length(p2)
         error('Both partitions must contain the same number of points.');
     end
-    
+
     % Check if arguments need to be flattened
     if length(p1)~=numel(p1)
         p1 = p1(:);
@@ -41,27 +41,27 @@ function ri = rand_index(p1, p2, varargin)
         p2 = p2(:);
         warning('The second partition was flattened to a 1D vector.')
     end
-    
+
     % Check for integers
     if isreal(p1) && all(rem(p1, 1)==0)
         % all is well
     else
         warning('The first partition contains non-integers, which may make the results meaningless. Attempting to continue calculations.');
     end
-        
+
     if isreal(p2) && all(rem(p2, 1)==0)
         % all is well
     else
         warning('The second partition contains non-integers, which may make the results meaningless. Attempting to continue calculations.');
     end
-    
+
 	%% Preliminary computations and cleansing of the partitions
     N = length(p1);
     [~, ~, p1] = unique(p1);
     N1 = max(p1);
     [~, ~, p2] = unique(p2);
     N2 = max(p2);
-    
+
     %% Create the matching matrix
     for i=1:1:N1
         for j=1:1:N2
@@ -70,7 +70,7 @@ function ri = rand_index(p1, p2, varargin)
             n(i,j) = length(intersect(G1,G2));
         end
     end
-    
+
     %% If required, calculate the basic rand index
     if adj==0
         ss = sum(sum(n.^2));
@@ -78,8 +78,8 @@ function ri = rand_index(p1, p2, varargin)
         ss2 =sum(sum(n,2).^2);
         ri = (nchoosek2(N,2) + ss - 0.5*ss1 - 0.5*ss2)/nchoosek2(N,2);
     end
-    
-    
+
+
     %% Otherwise, calculate the adjusted rand index
     if adj==1
         ssm = 0;
@@ -99,14 +99,16 @@ function ri = rand_index(p1, p2, varargin)
             sm2 = sm2 + nchoosek2(temp(i),2);
         end
         NN = ssm - sm1*sm2/nchoosek2(N,2);
-        DD = (sm1 + sm2)/2 - sm1*sm2/nchoosek2(N,2);   
+        DD = (sm1 + sm2)/2 - sm1*sm2/nchoosek2(N,2);
+
+        % Special case to handle perfect partitions
         if (NN == 0 && DD==0)
             ri = 1;
         else
             ri = NN/DD;
         end
-    end 
-    
+    end
+
 
     %% Special definition of n choose k
     function c = nchoosek2(a,b)
