@@ -64,8 +64,8 @@ function ri = rand_index(p1, p2, varargin)
 
     %% Create the matching matrix
     for i=1:1:N1
+        G1 = find(p1==i);
         for j=1:1:N2
-            G1 = find(p1==i);
             G2 = find(p2==j);
             n(i,j) = length(intersect(G1,G2));
         end
