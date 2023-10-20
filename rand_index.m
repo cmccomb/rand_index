@@ -62,13 +62,10 @@ function ri = rand_index(p1, p2, varargin)
     [~, ~, p2] = unique(p2);
     N2 = max(p2);
 
+    n = zeros(N1,N2);
     %% Create the matching matrix
-    for i=1:1:N1
-        G1 = find(p1==i);
-        for j=1:1:N2
-            G2 = find(p2==j);
-            n(i,j) = length(intersect(G1,G2));
-        end
+    for i = 1:length(p1)
+        n(p1(i), p2(i)) = n(p1(i), p2(i)) + 1;
     end
 
     %% If required, calculate the basic rand index
