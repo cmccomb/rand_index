@@ -1,3 +1,0 @@
-language: matlab
-matlab: latest
-script: matlab -batch 'test_rand_index'
