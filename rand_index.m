@@ -28,8 +28,16 @@ function ri = rand_index(p1, p2, varargin)
             error('%s is an unrecognized argument.', varargin{1});
         end
     end
-    if length(p1)~=length(p2)
+    if numel(p1)~=numel(p2)
         error('Both partitions must contain the same number of points.');
+    end
+    if numel(p1) < 2
+        error('Partitions must contain at least two points.');
+    end
+    if ~isnumeric(p1) || ~isnumeric(p2) || ...
+            ~isreal(p1) || ~isreal(p2) || ...
+            any(~isfinite(p1(:))) || any(~isfinite(p2(:)))
+        error('Partitions must contain finite real numeric labels.');
     end
 
     % Check if arguments need to be flattened
@@ -56,7 +64,7 @@ function ri = rand_index(p1, p2, varargin)
     end
 
 	%% Preliminary computations and cleansing of the partitions
-    N = length(p1);
+    N = numel(p1);
     [~, ~, p1] = unique(p1);
     N1 = max(p1);
     [~, ~, p2] = unique(p2);
