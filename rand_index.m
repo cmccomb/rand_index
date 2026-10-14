@@ -2,8 +2,8 @@ function ri = rand_index(p1, p2, varargin)
 %RAND_INDEX Computes the rand index between two partitions.
 %   RAND_INDEX(p1, p2) computes the rand index between partitions p1 and
 %   p2. Both p1 and p2 must be specified as N-by-1 or 1-by-N vectors in
-%   which each elements is an integer indicating which cluster the point
-%   belongs to.
+%   which each element is a finite real numeric cluster label. Labels do
+%   not need to be consecutive integers; only equality matters.
 %
 %   RAND_INDEX(p1, p2, 'adjusted') computes the adjusted rand index
 %   between partitions p1 and p2. The adjustment accounts for chance
@@ -48,19 +48,6 @@ function ri = rand_index(p1, p2, varargin)
     if length(p2)~=numel(p2)
         p2 = p2(:);
         warning('The second partition was flattened to a 1D vector.')
-    end
-
-    % Check for integers
-    if isreal(p1) && all(rem(p1, 1)==0)
-        % all is well
-    else
-        warning('The first partition contains non-integers, which may make the results meaningless. Attempting to continue calculations.');
-    end
-
-    if isreal(p2) && all(rem(p2, 1)==0)
-        % all is well
-    else
-        warning('The second partition contains non-integers, which may make the results meaningless. Attempting to continue calculations.');
     end
 
 	%% Preliminary computations and cleansing of the partitions

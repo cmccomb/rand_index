@@ -16,7 +16,8 @@ rand_index(truth, prediction, 'adjusted') % 1
 
 Place `rand_index.m` on your MATLAB path and call it with two equally sized
 vectors of finite, real numeric labels. At least two observations are required.
-Integer cluster labels are recommended. The function also runs in GNU Octave.
+Labels can be noninteger values because only equality defines cluster
+membership. The function also runs in GNU Octave.
 
 The adjusted index corrects for agreement expected by chance. When both
 partitions are identical but the adjustment has a zero denominator, the
