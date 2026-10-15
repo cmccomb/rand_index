@@ -22,6 +22,9 @@ membership. The function also runs in GNU Octave.
 The adjusted index corrects for agreement expected by chance. When both
 partitions are identical but the adjustment has a zero denominator, the
 function returns 1 by convention.
+The adjusted index can be negative when agreement is below chance.
+Pass one cluster label per observation. If your assignments are stored as
+membership matrices, convert them to label vectors first.
 
 ## Test
 
