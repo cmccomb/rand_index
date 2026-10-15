@@ -26,6 +26,23 @@ The adjusted index can be negative when agreement is below chance.
 Pass one cluster label per observation. If your assignments are stored as
 membership matrices, convert them to label vectors first.
 
+## Iris k-means example
+
+This example uses the `fisheriris` data and `kmeans` from Statistics and
+Machine Learning Toolbox. The cluster numbers assigned by k-means do not need
+to match the species numbers.
+
+```matlab
+load fisheriris
+rng(1)
+predicted = kmeans(meas, 3, 'Replicates', 10);
+[~, ~, reference] = unique(species);
+ri = rand_index(reference, predicted);
+ari = rand_index(reference, predicted, 'adjusted');
+```
+
+`ri` and `ari` compare the 150 predicted labels with the 150 species labels.
+
 ## Test
 
 Run `test_rand_index` from this folder in MATLAB. The GitHub Actions workflow
@@ -33,8 +50,8 @@ runs the same checks on pushes and pull requests.
 
 ## Distribution
 
-This project is also available as [Adjusted Rand Index on MATLAB File
-Exchange](https://www.mathworks.com/matlabcentral/fileexchange/49908-adjusted-rand-index).
+This project is also available as [Rand and Adjusted Rand Index on MATLAB File
+Exchange](https://www.mathworks.com/matlabcentral/fileexchange/49908-rand-and-adjusted-rand-index).
 Releases and source code live in this repository.
 
 ## License

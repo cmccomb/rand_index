@@ -67,3 +67,10 @@ try
 catch err
     assert(contains(err.message, 'finite real numeric'));
 end
+
+try
+    rand_index([1 0; 0 1], [1 2 1 2], 'adjusted');
+    error('Expected an error for a membership matrix.');
+catch err
+    assert(contains(err.message, 'vectors with one label per observation'));
+end

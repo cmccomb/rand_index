@@ -39,15 +39,8 @@ function ri = rand_index(p1, p2, varargin)
             any(~isfinite(p1(:))) || any(~isfinite(p2(:)))
         error('Partitions must contain finite real numeric labels.');
     end
-
-    % Check if arguments need to be flattened
-    if length(p1)~=numel(p1)
-        p1 = p1(:);
-        warning('The first partition was flattened to a 1D vector.')
-    end
-    if length(p2)~=numel(p2)
-        p2 = p2(:);
-        warning('The second partition was flattened to a 1D vector.')
+    if ~isvector(p1) || ~isvector(p2)
+        error('Partitions must be vectors with one label per observation.');
     end
 
 	%% Preliminary computations and cleansing of the partitions
